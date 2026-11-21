@@ -1,0 +1,156 @@
+[
+    {
+        "company": "Cynaris Solutions",
+        "role": "AI / ML Intern",
+        "location": "Bengaluru",
+        "work_mode": "Hybrid",
+        "experience": "Fresher / Student",
+        "stipend": "Unpaid",
+        "openings": "15 positions",
+        "deadline": "31 Dec 2026",
+        "required_skills": [
+            "Python",
+            "NumPy",
+            "Pandas",
+            "Scikit-learn",
+            "Machine Learning concepts (regression, classification, clustering, model evaluation)",
+            "Personal laptop"
+        ],
+        "foundational_ml_topics": [
+            "Regression",
+            "Classification",
+            "Clustering",
+            "Model evaluation"
+        ],
+        "optional_skills": [
+            "TensorFlow",
+            "PyTorch",
+            "Keras"
+        ],
+        "responsibilities": [
+            "Build and evaluate machine learning models for classification, regression, and clustering tasks",
+            "Work with real datasets — clean, preprocess, and perform exploratory data analysis",
+            "Experiment with deep learning frameworks (TensorFlow or PyTorch) for vision or NLP projects",
+            "Document experiments, results, and insights clearly for team review",
+            "Contribute to AI/ML pipelines and automation workflows",
+            "Assist in building, training, and evaluating machine learning models for classification, regression, or NLP tasks using Python (scikit-learn, TensorFlow, or PyTorch)",
+            "Preprocess, clean, and explore datasets to identify patterns and prepare features for model training",
+            "Document model performance metrics, experiments, and findings in structured reports",
+            "Collaborate with the data engineering team to integrate ML pipelines into production-ready workflows",
+            "Research and apply state-of-the-art algorithms and techniques to improve model accuracy and efficiency",
+            "Assist in building proof-of-concept AI features and demos for internal products",
+            "Participate in code reviews and contribute to team knowledge-sharing sessions"
+        ],
+        "eligibility": [
+            "Pursuing B.Tech / BE / MCA / MSc in Computer Science, Data Science, or a related field",
+            "Must have a personal laptop to work on"
+        ],
+        "benefits": [
+            "Exposure to real-world AI/ML use cases across multiple domains",
+            "Guidance and code reviews from experienced ML engineers and data scientists",
+            "Certificate of Completion issued after online assessment and demo video submission",
+            "Letter of Recommendation based on performance and conduct",
+            "Build a strong project portfolio with industry-grade ML work"
+        ],
+        "source_url": "https://cynarissolutions.com/job/ai-ml-intern",
+        "extraction_status": "success"
+    },
+    {
+        "company": "Cynaris Solutions",
+        "role": "Full Stack Development Intern",
+        "location": "Bengaluru",
+        "work_mode": "Hybrid",
+        "experience": "Fresher / Student",
+        "stipend": "Unpaid",
+        "openings": "15 positions",
+        "deadline": "31 Dec 2026",
+        "required_skills": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "Backend language or framework (PHP, Laravel, Node.js, Python, etc.)",
+            "REST APIs",
+            "Personal laptop"
+        ],
+        "foundational_ml_topics": [],
+        "optional_skills": [
+            "MySQL",
+            "PostgreSQL",
+            "React",
+            "Vue",
+            "Node.js",
+            "Laravel"
+        ],
+        "responsibilities": [
+            "Develop and maintain web application features across the full stack using React (or Vue) on the frontend and Node.js / Laravel on the backend",
+            "Write clean, well-structured RESTful APIs and integrate third-party services as required",
+            "Participate in sprint planning, daily standups, and retrospectives following agile methodology",
+            "Debug, test, and fix issues across frontend and backend layers with appropriate test coverage",
+            "Collaborate with UI/UX designers to implement pixel-accurate, responsive interfaces",
+            "Contribute to code reviews and maintain coding standards and documentation",
+            "Assist in database design, query optimisation, and performance tuning tasks"
+        ],
+        "eligibility": [
+            "Pursuing B.Tech / BE / BCA or a related degree in Computer Science or IT"
+        ],
+        "benefits": [
+            "Work on production-grade codebases with real users and real stakes",
+            "Mentorship from senior full-stack engineers with hands-on code reviews",
+            "Certificate of Completion issued after online assessment and demo video submission",
+            "Letter of Recommendation based on performance and conduct",
+            "Strong portfolio output — ship features you can talk about in interviews"
+        ],
+        "source_url": "https://cynarissolutions.com/job/full-stack-development-intern",
+        "extraction_status": "success"
+    },
+    {
+        "company": "Cynaris Solutions",
+        "role": "Data Analyst Intern",
+        "location": "Bengaluru",
+        "work_mode": "Hybrid",
+        "experience": "Fresher / Student",
+        "stipend": "Unpaid",
+        "openings": "15 positions",
+        "deadline": "31 Dec 2026",
+        "required_skills": [
+            "Microsoft Excel (formulas, pivot tables, charts)",
+            "SQL (basic understanding for data querying and filtering)",
+            "Analytical mindset",
+            "Attention to detail and accuracy",
+            "Personal laptop"
+        ],
+        "foundational_ml_topics": [],
+        "optional_skills": [
+            "Power BI",
+            "Tableau",
+            "Google Data Studio",
+            "Python (Pandas)"
+        ],
+        "responsibilities": [
+            "Analyse business datasets and extract meaningful patterns and trends",
+            "Build interactive dashboards and visual reports using Power BI, Tableau, or Google Data Studio",
+            "Write SQL queries to extract, filter, and aggregate data from databases",
+            "Work with Python (Pandas) for data cleaning, transformation, and analysis",
+            "Present findings clearly in structured reports for stakeholder review",
+            "Collect, clean, and preprocess structured and unstructured data from multiple internal and external sources",
+            "Build and maintain dashboards and reports using tools such as Power BI, Tableau, or Google Data Studio",
+            "Perform exploratory data analysis (EDA) to surface actionable business insights",
+            "Collaborate with business stakeholders to understand data requirements and translate them into analytical deliverables",
+            "Write efficient SQL queries for data extraction, transformation, and validation",
+            "Assist in automating recurring reports and data pipelines to improve team efficiency",
+            "Document data definitions, metrics, and methodology for internal knowledge repositories"
+        ],
+        "eligibility": [
+            "Pursuing B.Tech / BCA / BBA / BCom or a related degree"
+        ],
+        "benefits": [
+            "Hands-on work with real business datasets across different domains",
+            "Exposure to industry-standard BI and analytics tools used in production",
+            "Certificate of Completion issued after online assessment and demo video submission",
+            "Letter of Recommendation based on performance and conduct",
+            "Build a data portfolio with dashboards and analysis reports you can showcase"
+        ],
+        "source_url": "https://cynarissolutions.com/job/data-analyst-intern",
+        "extraction_status": "success"
+    }
+]

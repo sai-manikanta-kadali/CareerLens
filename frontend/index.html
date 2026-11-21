@@ -1,0 +1,663 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Internship Research Agent</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #101827;
+            color: #f1f5f9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+        }
+
+        header p, .muted {
+            color: #94a3b8;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 16px;
+            border-radius: 7px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: white;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 12px 20px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #15803d;
+        }
+
+        .job {
+            padding: 14px;
+            margin-top: 10px;
+            background: #0f172a;
+            border-radius: 8px;
+        }
+
+        .score {
+            font-size: 34px;
+            font-weight: bold;
+            color: #4ade80;
+        }
+
+        .result-item {
+            padding: 15px;
+            margin: 12px 0;
+            background: #0f172a;
+            border-radius: 8px;
+        }
+
+        .status {
+            color: #4ade80;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        a {
+            color: #60a5fa;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>AI Internship Research Agent</h1>
+        <p>Discover internships and analyze your skill compatibility.</p>
+        <p id="connectionStatus" class="muted">
+            Checking backend connection...
+        </p>
+    </header>
+
+    
+<!-- Authentication Section -->
+<section class="card" id="authSection">
+
+    <h2>Account Login</h2>
+
+    <label>Username</label>
+    <input id="authUsername" placeholder="Enter username">
+
+    <label>Password</label>
+    <input
+        type="password"
+        id="authPassword"
+        placeholder="Enter password"
+    >
+
+    <button onclick="registerUser()">Register</button>
+    <button onclick="loginUser()">Login</button>
+    <button onclick="logoutUser()">Logout</button>
+
+    <p id="authMessage" class="muted"></p>
+
+</section>
+
+<section class="card">
+
+        <h2>Candidate Profile</h2>
+
+        <label>Candidate ID</label>
+
+        <input
+            id="candidateId"
+            value="demo_candidate_001"
+        >
+
+        <label>Your Skills (comma separated)</label>
+
+        <textarea
+            id="skills"
+            placeholder="Python, NumPy, Pandas, Regression"
+        ></textarea>
+
+        <button onclick="analyzeCandidate()">
+            Analyze Internships
+        </button>
+
+        <p id="message" class="muted"></p>
+
+    </section>
+
+    <section class="card">
+
+        <h2>Available Internships</h2>
+
+        <div id="jobList">
+            Loading internships...
+        </div>
+
+    </section>
+
+    <section class="card" id="results" hidden>
+
+        <h2>Analysis Results</h2>
+
+        <div id="bestMatch"></div>
+
+        <h3>Internship Rankings</h3>
+
+        
+        <div id="ranking"></div>
+
+        <h3>Learning Roadmap</h3>
+        <div id="roadmap"></div>
+    
+
+    </section>
+
+</div>
+
+<script>
+
+    function escapeHTML(value) {
+
+        const element = document.createElement("div");
+
+        element.textContent = String(value ?? "");
+
+        return element.innerHTML;
+    }
+
+
+    // Load backend and available jobs
+    async function loadDashboard() {
+
+        try {
+
+            const healthResponse = await fetch("/health");
+
+            if (!healthResponse.ok) {
+                throw new Error("Backend unavailable");
+            }
+
+            const health = await healthResponse.json();
+
+            document.getElementById("connectionStatus").textContent =
+                "Backend: " + health.status +
+                " | Database: " + health.database;
+
+            document.getElementById("connectionStatus")
+                .className = "status";
+
+            const response = await fetch("/jobs");
+
+            if (!response.ok) {
+                throw new Error("Unable to retrieve internships");
+            }
+
+            const data = await response.json();
+
+            const jobList = document.getElementById("jobList");
+
+            if (!data.jobs || data.jobs.length === 0) {
+                jobList.textContent = "No internships available.";
+                return;
+            }
+
+            jobList.innerHTML = data.jobs.map(job => `
+                <div class="job">
+                    <h3>${escapeHTML(job.role)}</h3>
+                    <p>${escapeHTML(job.company)}</p>
+                    <p class="muted">
+                        ${escapeHTML(job.location)}
+                    </p>
+                </div>
+            `).join("");
+
+        } catch (error) {
+
+            document.getElementById("connectionStatus").textContent =
+                error.message;
+
+            document.getElementById("connectionStatus")
+                .className = "error";
+
+            document.getElementById("jobList").textContent =
+                "Could not load internships.";
+        }
+    }
+
+
+    // Submit candidate skills
+
+    // Submit candidate skills with JWT authentication
+    async function analyzeCandidate() {
+
+        const skills = document.getElementById("skills").value
+            .split(",")
+            .map(skill => skill.trim())
+            .filter(Boolean);
+
+        const message = document.getElementById("message");
+
+        if (!accessToken) {
+            message.textContent = "Please login first.";
+            return;
+        }
+
+        if (skills.length === 0) {
+            message.textContent = "Enter at least one skill.";
+            return;
+        }
+
+        message.textContent = "Analyzing internships...";
+
+        try {
+
+            const response = await fetch("/analyze", {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`
+                },
+
+                body: JSON.stringify({
+                    candidate_skills: skills
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || "Analysis failed");
+            }
+
+            message.textContent = "Analysis completed successfully!";
+
+            displayResults(data.report);
+            await loadHistory();
+
+        } catch (error) {
+            message.textContent = error.message;
+        }
+    }
+
+
+    // Display analysis results
+    function displayResults(report) {
+
+        document.getElementById("results").hidden = false;
+
+        const summary = report.analysis_summary;
+
+        document.getElementById("bestMatch").innerHTML = `
+
+            <h3>Best Matching Internship</h3>
+
+            <div class="score">
+                ${summary.best_match_percentage ?? 0}%
+            </div>
+
+            <h3>
+                ${escapeHTML(summary.best_matching_role || "No match")}
+            </h3>
+
+            <p class="muted">
+                Jobs analyzed: ${summary.jobs_analyzed}
+                | Jobs skipped: ${summary.jobs_skipped}
+            </p>
+
+        `;
+
+        const roadmap = report.learning_roadmap || [];
+
+document.getElementById("roadmap").innerHTML =
+    roadmap.map(step => `
+
+        <div class="result-item">
+
+            <h3>
+                Step ${step.step}: ${escapeHTML(step.skill)}
+            </h3>
+
+            <p>
+                <strong>What to learn:</strong>
+                ${escapeHTML(step.learning_objective)}
+            </p>
+
+            <p>
+                <strong>Practice project:</strong>
+                ${escapeHTML(step.practice_task)}
+            </p>
+
+        </div>
+
+    `).join("") ||
+    "<p>No missing skills identified.</p>";
+
+        document.getElementById("ranking").innerHTML =
+            report.ranked_jobs.map(job => `
+
+                <div class="result-item">
+
+                    <h3>
+                        #${job.rank} -
+                        ${escapeHTML(job.role)}
+                    </h3>
+
+                    <p>
+                        Match:
+                        <strong>${job.match_percentage}%</strong>
+                    </p>
+
+                    <p>
+                        Matched:
+                        ${job.matched_skills.map(escapeHTML).join(", ") || "None"}
+                    </p>
+
+                    <p>
+                        Missing technical skills:
+${job.missing_skills.map(escapeHTML).join(", ") || "None"}
+                    </p>
+<p>Other requirements (not included in skill score): ${(job.other_requirements || []).map(escapeHTML).join(", ") || "None"}</p>
+
+                    <p>
+                        <strong>Eligibility (not included in match score):</strong>
+                        ${
+                            Array.isArray(job.eligibility_requirements)
+                            && job.eligibility_requirements.length
+                            ? job.eligibility_requirements.map(escapeHTML).join(", ")
+                            : "None listed"
+                        }
+                    </p>
+
+                    <a
+                        href="${escapeHTML(job.source_url)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Job
+                    </a>
+
+                </div>
+
+            `).join("");
+    }
+
+
+    // Start dashboard
+    loadDashboard();
+
+
+
+// JWT token stored during current page session
+let accessToken = null;
+
+
+// Display authentication messages
+function showAuthMessage(message, isError = false) {
+
+    const element = document.getElementById("authMessage");
+
+    element.textContent = message;
+
+    element.className = isError ? "error" : "success";
+}
+
+
+// Register new user
+async function registerUser() {
+
+    const username =
+        document.getElementById("authUsername").value.trim();
+
+    const password =
+        document.getElementById("authPassword").value;
+
+    if (!username || !password) {
+        showAuthMessage("Enter username and password.", true);
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/auth/register", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Registration failed");
+        }
+
+        showAuthMessage("Registration successful! Please login.");
+
+    } catch(error) {
+
+        showAuthMessage(error.message, true);
+    }
+}
+
+
+// Login existing user
+async function loginUser() {
+
+    const username =
+        document.getElementById("authUsername").value.trim();
+
+    const password =
+        document.getElementById("authPassword").value;
+
+    if (!username || !password) {
+        showAuthMessage("Enter username and password.", true);
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/auth/login", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Login failed");
+        }
+
+        accessToken = data.access_token;
+
+        showAuthMessage("Login successful! Welcome " + username);
+
+        await loadHistory();
+
+    } catch(error) {
+
+        showAuthMessage(error.message, true);
+    }
+}
+
+
+
+    // Load analysis history of the logged-in user
+    async function loadHistory() {
+
+        if (!accessToken) return;
+
+        let section = document.getElementById("historySection");
+
+        // Create history section if it does not exist
+        if (!section) {
+
+            section = document.createElement("section");
+            section.id = "historySection";
+
+            section.style.marginTop = "25px";
+            section.style.padding = "20px";
+            section.style.border = "1px solid #ccc";
+            section.style.borderRadius = "10px";
+
+            section.innerHTML = `
+                <h2>My Analysis History</h2>
+                <p id="historyStatus">Loading history...</p>
+                <div id="historyList"></div>
+            `;
+
+            const results = document.getElementById("results");
+
+            if (results && results.parentNode) {
+                results.parentNode.insertBefore(
+                    section,
+                    results.nextSibling
+                );
+            } else {
+                document.body.appendChild(section);
+            }
+        }
+
+        const status = document.getElementById("historyStatus");
+        const historyList = document.getElementById("historyList");
+
+        status.textContent = "Loading history...";
+        historyList.replaceChildren();
+
+        try {
+
+            const response = await fetch("/me/analyses", {
+
+                method: "GET",
+
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || "Could not load history");
+            }
+
+            const records = Array.isArray(data.history)
+                ? data.history
+                : [];
+
+            if (records.length === 0) {
+                status.textContent = "No previous analyses found.";
+                return;
+            }
+
+            status.textContent =
+                `Total saved analyses: ${data.total_records}`;
+
+            records.forEach((record, index) => {
+
+                const card = document.createElement("div");
+
+                card.style.marginTop = "15px";
+                card.style.padding = "12px";
+                card.style.border = "1px solid #ddd";
+                card.style.borderRadius = "8px";
+
+                const heading = document.createElement("h3");
+                heading.textContent = `Analysis ${index + 1}`;
+
+                const details = document.createElement("pre");
+                details.style.whiteSpace = "pre-wrap";
+                details.style.overflowWrap = "anywhere";
+                details.textContent = JSON.stringify(record, null, 2);
+
+                card.appendChild(heading);
+                card.appendChild(details);
+
+                historyList.appendChild(card);
+
+            });
+
+        } catch (error) {
+
+            status.textContent = error.message;
+
+        }
+    }
+
+
+// Logout
+function logoutUser() {
+
+    accessToken = null;
+
+    const historySection = document.getElementById("historySection");
+    if (historySection) historySection.remove();
+
+    showAuthMessage("Logged out successfully.");
+}
+
+
+</script>
+
+</body>
+</html>

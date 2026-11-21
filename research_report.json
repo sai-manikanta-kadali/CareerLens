@@ -1,0 +1,82 @@
+{
+    "status": "success",
+    "candidate_profile": {
+        "skills": [
+            "Python",
+            "NumPy",
+            "Pandas",
+            "Regression",
+            "Classification"
+        ]
+    },
+    "analysis_summary": {
+        "total_jobs_analyzed": 3,
+        "best_matching_role": "AI / ML Intern",
+        "best_match_percentage": 50.0
+    },
+    "ranked_jobs": [
+        {
+            "rank": 1,
+            "company": "Cynaris Solutions",
+            "role": "AI / ML Intern",
+            "match_percentage": 50.0,
+            "matched_skills": [
+                "Python",
+                "NumPy",
+                "Pandas",
+                "Regression",
+                "Classification"
+            ],
+            "missing_skills": [
+                "Scikit-learn",
+                "Machine Learning concepts (regression, classification, clustering, model evaluation)",
+                "Personal laptop",
+                "Clustering",
+                "Model evaluation"
+            ],
+            "optional_skills_matched": [],
+            "source_url": "https://cynarissolutions.com/job/ai-ml-intern"
+        },
+        {
+            "rank": 2,
+            "company": "Cynaris Solutions",
+            "role": "Full Stack Development Intern",
+            "match_percentage": 0.0,
+            "matched_skills": [],
+            "missing_skills": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "Backend language or framework (PHP, Laravel, Node.js, Python, etc.)",
+                "REST APIs",
+                "Personal laptop"
+            ],
+            "optional_skills_matched": [],
+            "source_url": "https://cynarissolutions.com/job/full-stack-development-intern"
+        },
+        {
+            "rank": 3,
+            "company": "Cynaris Solutions",
+            "role": "Data Analyst Intern",
+            "match_percentage": 0.0,
+            "matched_skills": [],
+            "missing_skills": [
+                "Microsoft Excel (formulas, pivot tables, charts)",
+                "SQL (basic understanding for data querying and filtering)",
+                "Analytical mindset",
+                "Attention to detail and accuracy",
+                "Personal laptop"
+            ],
+            "optional_skills_matched": [],
+            "source_url": "https://cynarissolutions.com/job/data-analyst-intern"
+        }
+    ],
+    "recommended_learning_focus": [
+        "Scikit-learn",
+        "Machine Learning concepts (regression, classification, clustering, model evaluation)",
+        "Personal laptop",
+        "Clustering",
+        "Model evaluation"
+    ],
+    "methodology": "Exact normalized skill matching. Match percentage is not selection probability."
+}

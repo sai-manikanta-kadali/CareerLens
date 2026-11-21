@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+*.log
+*.zip
+__pycache__/
+.venv/
+venv/
+node_modules/
+.ipynb_checkpoints/
+*.pyc
+.DS_Store
+
+sample_data/
+*.ipynb
