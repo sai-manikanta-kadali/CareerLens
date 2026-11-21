@@ -1,5 +1,7 @@
 # CareerLens — AI Internship Research Agent
 
+**🚀 Live Demo:** [Open CareerLens](https://careerlens-z9ty.onrender.com)
+
 A full-stack internship research and skill-gap analysis application. CareerLens compares a candidate's declared skills with structured internship requirements, ranks opportunities by technical-skill overlap, and creates a focused learning roadmap.
 
 > Match percentages are rule-based skill-overlap indicators. They are not hiring probabilities, eligibility decisions, or guarantees of selection.
