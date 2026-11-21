@@ -1,663 +1,284 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>AI Internship Research Agent</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 30px;
-            font-family: Arial, sans-serif;
-            background: #101827;
-            color: #f1f5f9;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        header {
-            margin-bottom: 30px;
-        }
-
-        header p, .muted {
-            color: #94a3b8;
-        }
-
-        .card {
-            background: #1e293b;
-            padding: 22px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #334155;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0 16px;
-            border-radius: 7px;
-            border: 1px solid #475569;
-            background: #0f172a;
-            color: white;
-        }
-
-        textarea {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-        button {
-            padding: 12px 20px;
-            background: #16a34a;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #15803d;
-        }
-
-        .job {
-            padding: 14px;
-            margin-top: 10px;
-            background: #0f172a;
-            border-radius: 8px;
-        }
-
-        .score {
-            font-size: 34px;
-            font-weight: bold;
-            color: #4ade80;
-        }
-
-        .result-item {
-            padding: 15px;
-            margin: 12px 0;
-            background: #0f172a;
-            border-radius: 8px;
-        }
-
-        .status {
-            color: #4ade80;
-        }
-
-        .error {
-            color: #f87171;
-        }
-
-        a {
-            color: #60a5fa;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Compare your skills with internship requirements and build a focused learning plan.">
+<meta name="theme-color" content="#090e1b">
+<title>CareerLens — AI Internship Research Agent</title>
+<style>
+:root{color-scheme:dark;--bg:#090e1b;--panel:#111a2d;--panel2:#172239;--line:rgba(148,163,184,.16);--text:#edf2ff;--muted:#94a3b8;--subtle:#64748b;--blue:#8b9cff;--mint:#6ee7c1;--amber:#f6c77a;--rose:#fb8ca4;--shadow:0 22px 70px rgba(0,0,0,.24)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 72% -12%,rgba(99,102,241,.18),transparent 34rem),radial-gradient(ellipse at 0% 38%,rgba(45,212,191,.08),transparent 30rem),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+button,input,textarea{font:inherit}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:3px}[hidden]{display:none!important}
+.sidebar{position:fixed;inset:0 auto 0 0;width:248px;padding:28px 18px;display:flex;flex-direction:column;gap:30px;background:rgba(11,16,32,.84);border-right:1px solid var(--line);backdrop-filter:blur(22px);z-index:5}
+.brand{display:flex;align-items:center;gap:12px;padding:0 10px}.brand-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;color:#0c1426;font-weight:900;font-size:18px;background:linear-gradient(135deg,var(--mint),#a5b4fc 62%,#c4b5fd);box-shadow:0 8px 26px rgba(129,140,248,.22)}.brand-name{font-weight:800;letter-spacing:-.04em}.brand-caption{display:block;color:var(--subtle);font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+.nav-label{padding:0 12px;margin-bottom:8px;color:var(--subtle);font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}.nav-list{display:grid;gap:6px}.nav-link{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:12px;color:var(--muted);font-size:13px;font-weight:650;transition:.2s}.nav-link:hover,.nav-link.active{color:var(--text);background:rgba(139,156,255,.12)}.nav-icon{width:22px;text-align:center}.sidebar-bottom{margin-top:auto;padding:15px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(139,156,255,.1),rgba(110,231,193,.04))}.sidebar-bottom strong{font-size:12px}.sidebar-bottom p{margin:6px 0 0;color:var(--muted);font-size:11px}
+.main{margin-left:248px;padding:28px clamp(20px,4vw,58px) 54px;max-width:1700px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:36px}.breadcrumb{color:var(--muted);font-size:12px}.topbar-right{display:flex;align-items:center;gap:12px}.status-pill,.user-pill,.tag{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:rgba(17,26,45,.72);color:var(--muted);font-size:11px;font-weight:650}.status-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 4px rgba(110,231,193,.1)}.user-avatar{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,#7789f7,#a78bfa);color:white;font-size:11px;font-weight:800}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:28px}.eyebrow,.panel-kicker{color:var(--mint);font-size:10px;font-weight:850;letter-spacing:.18em;text-transform:uppercase}h1{margin:9px 0 10px;max-width:720px;font-size:clamp(30px,4vw,48px);line-height:1.08;letter-spacing:-.055em}.hero p{max-width:650px;margin:0;color:var(--muted);font-size:14px}.hero-accent{padding:13px 16px;border:1px solid rgba(139,156,255,.22);border-radius:15px;background:rgba(139,156,255,.08);color:#c7d2fe;font-size:12px;font-weight:700;white-space:nowrap}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:26px 0}.metric{min-height:116px;padding:18px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,rgba(23,34,57,.94),rgba(17,26,45,.88));box-shadow:0 12px 36px rgba(0,0,0,.12)}.metric-label{color:var(--muted);font-size:11px;font-weight:650}.metric-value{margin-top:10px;font-size:29px;font-weight:800;letter-spacing:-.05em}.metric-note{margin-top:2px;color:var(--subtle);font-size:10px}
+.workspace{display:grid;grid-template-columns:minmax(280px,.85fr) minmax(320px,1.15fr);gap:16px;margin:18px 0 28px;align-items:stretch}.panel{padding:22px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,rgba(20,31,52,.96),rgba(15,23,40,.96));box-shadow:var(--shadow)}.panel-header{display:flex;justify-content:space-between;align-items:start;gap:14px;margin-bottom:18px}.panel-kicker{color:var(--blue);letter-spacing:.15em}h2{margin:4px 0 0;font-size:19px;letter-spacing:-.035em}h3{margin:0;font-size:14px;letter-spacing:-.02em}.panel-description{margin:6px 0 0;color:var(--muted);font-size:12px}.form-grid{display:grid;gap:13px}label{display:block;margin-bottom:7px;color:#cbd5e1;font-size:11px;font-weight:750}input,textarea{width:100%;border:1px solid rgba(148,163,184,.2);border-radius:12px;background:rgba(7,12,24,.75);color:var(--text);padding:12px 14px;font-size:13px;transition:border-color .2s,box-shadow .2s}input::placeholder,textarea::placeholder{color:#64748b}input:focus,textarea:focus{border-color:rgba(139,156,255,.7);box-shadow:0 0 0 3px rgba(139,156,255,.1);outline:none}textarea{min-height:106px;resize:vertical}.field-hint{margin-top:6px;color:var(--subtle);font-size:10px}.button-row{display:flex;flex-wrap:wrap;gap:9px}.button{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:1px solid transparent;border-radius:11px;padding:11px 15px;background:linear-gradient(135deg,#9aa8ff,#8b7cf6);color:#10172b;font-size:12px;font-weight:850;cursor:pointer;transition:transform .18s,filter .18s}.button:hover{transform:translateY(-1px);filter:brightness(1.08)}.button:disabled{opacity:.55;cursor:wait;transform:none}.button-secondary{color:#dbe4ff;background:rgba(139,156,255,.1);border-color:rgba(139,156,255,.22)}.button-ghost{color:var(--muted);background:transparent;border-color:var(--line)}.message{min-height:18px;margin:2px 0 0;color:var(--muted);font-size:11px}.message.error{color:var(--rose)}.message.success{color:var(--mint)}
+.job-section{margin-top:24px}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:15px}.section-heading h2{font-size:22px}.section-heading p{margin:5px 0 0;color:var(--muted);font-size:12px}.count-label{color:var(--subtle);font-size:11px}.job-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.job-card{position:relative;overflow:hidden;padding:18px;border:1px solid var(--line);border-radius:17px;background:rgba(17,26,45,.82);transition:transform .2s,border-color .2s,background .2s}.job-card:hover{transform:translateY(-3px);border-color:rgba(139,156,255,.35);background:rgba(25,37,62,.95)}.job-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.company-mark{width:35px;height:35px;display:grid;place-items:center;border-radius:11px;background:rgba(110,231,193,.1);color:var(--mint);font-weight:900}.job-card h3{min-height:42px;font-size:15px}.company-name{margin:4px 0 12px;color:var(--muted);font-size:11px}.job-meta{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 16px}.tag{padding:5px 8px;font-size:9px}.job-link{display:inline-flex;align-items:center;gap:6px;color:#bac6ff;font-size:11px;font-weight:800}.job-link:hover{color:white}
+.results-section{margin-top:32px}.best-card{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:23px;border:1px solid rgba(110,231,193,.2);border-radius:19px;background:radial-gradient(circle at 85% 25%,rgba(110,231,193,.1),transparent 18rem),linear-gradient(135deg,rgba(20,43,55,.8),rgba(17,26,45,.95))}.best-card h3{margin:8px 0 4px;font-size:19px}.best-card p{margin:0;color:var(--muted);font-size:11px}.score-ring{width:100px;height:100px;display:grid;place-items:center;border-radius:50%;background:conic-gradient(var(--mint) var(--score),rgba(148,163,184,.13) 0);position:relative}.score-ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#122332}.score-ring strong{position:relative;z-index:1;font-size:24px;letter-spacing:-.05em}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:17px}.result-card{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(17,26,45,.82)}.result-card h3{margin-bottom:15px}.ranking-list{display:grid;gap:12px}.ranking-item{padding:15px;border:1px solid var(--line);border-radius:14px;background:rgba(7,12,24,.38)}.ranking-head{display:flex;justify-content:space-between;align-items:start;gap:12px}.rank-title{display:flex;align-items:start;gap:10px}.rank-number{width:25px;height:25px;flex:0 0 25px;display:grid;place-items:center;border-radius:8px;background:rgba(139,156,255,.13);color:#c7d2fe;font-size:10px;font-weight:900}.match-value{color:var(--mint);font-size:13px;font-weight:900;white-space:nowrap}.progress-track{height:6px;margin:12px 0;overflow:hidden;border-radius:99px;background:rgba(148,163,184,.13)}.progress-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#8b9cff,#6ee7c1)}.skill-row{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.skill-chip{padding:5px 8px;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:10px}.skill-chip.good{border-color:rgba(110,231,193,.2);background:rgba(110,231,193,.07);color:#a7f3d0}.skill-chip.gap{border-color:rgba(246,199,122,.18);background:rgba(246,199,122,.06);color:#f6d59e}.detail-label{margin:11px 0 5px;color:var(--subtle);font-size:9px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.detail-copy{color:var(--muted);font-size:11px}.roadmap-list{display:grid;gap:11px}.roadmap-item{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.roadmap-item:last-child{border-bottom:0}.step-number{width:28px;height:28px;display:grid;place-items:center;border-radius:9px;background:rgba(110,231,193,.1);color:var(--mint);font-size:11px;font-weight:900}.roadmap-item p{margin:5px 0 0;color:var(--muted);font-size:11px}
+.history-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.history-card{padding:16px;border:1px solid var(--line);border-radius:15px;background:rgba(17,26,45,.84)}.history-card-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.history-score{color:var(--mint);font-size:18px;font-weight:900}.history-card p{margin:9px 0;color:var(--muted);font-size:11px}.empty-state{padding:24px;border:1px dashed rgba(148,163,184,.22);border-radius:14px;color:var(--muted);text-align:center;font-size:12px}.footer{margin-top:42px;padding-top:18px;border-top:1px solid var(--line);color:var(--subtle);font-size:10px;text-align:center}
+@media(max-width:1120px){.sidebar{width:210px}.main{margin-left:210px}.job-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:850px){.sidebar{position:static;width:auto;height:auto;padding:14px 18px;flex-direction:row;align-items:center;justify-content:space-between;border-right:0;border-bottom:1px solid var(--line)}.sidebar nav,.sidebar-bottom{display:none}.main{margin-left:0;padding:22px 18px 40px}.topbar{margin-bottom:24px}.workspace{grid-template-columns:1fr}}
+@media(max-width:600px){.hero{display:block}.hero-accent{display:inline-flex;margin-top:18px}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.metric{min-height:100px;padding:14px}.metric-value{font-size:24px}.job-grid,.result-grid,.history-list{grid-template-columns:1fr}.best-card{grid-template-columns:1fr auto;padding:17px}.score-ring{width:78px;height:78px}.score-ring strong{font-size:19px}.panel{padding:17px}.topbar{align-items:start}.topbar-right{gap:6px}.status-pill{font-size:9px;padding:6px 8px}.user-pill{padding:5px 7px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
-
 <body>
-
-<div class="container">
-
-    <header>
-        <h1>AI Internship Research Agent</h1>
-        <p>Discover internships and analyze your skill compatibility.</p>
-        <p id="connectionStatus" class="muted">
-            Checking backend connection...
-        </p>
-    </header>
-
-    
-<!-- Authentication Section -->
-<section class="card" id="authSection">
-
-    <h2>Account Login</h2>
-
-    <label>Username</label>
-    <input id="authUsername" placeholder="Enter username">
-
-    <label>Password</label>
-    <input
-        type="password"
-        id="authPassword"
-        placeholder="Enter password"
-    >
-
-    <button onclick="registerUser()">Register</button>
-    <button onclick="loginUser()">Login</button>
-    <button onclick="logoutUser()">Logout</button>
-
-    <p id="authMessage" class="muted"></p>
-
-</section>
-
-<section class="card">
-
-        <h2>Candidate Profile</h2>
-
-        <label>Candidate ID</label>
-
-        <input
-            id="candidateId"
-            value="demo_candidate_001"
-        >
-
-        <label>Your Skills (comma separated)</label>
-
-        <textarea
-            id="skills"
-            placeholder="Python, NumPy, Pandas, Regression"
-        ></textarea>
-
-        <button onclick="analyzeCandidate()">
-            Analyze Internships
-        </button>
-
-        <p id="message" class="muted"></p>
-
+<div class="app-shell">
+<aside class="sidebar" aria-label="Main navigation">
+  <a class="brand" href="#overview"><span class="brand-mark">C</span><span><span class="brand-name">CareerLens</span><span class="brand-caption">Internship intelligence</span></span></a>
+  <nav><div class="nav-label">Workspace</div><div class="nav-list">
+    <a class="nav-link active" href="#overview"><span class="nav-icon">◈</span> Overview</a>
+    <a class="nav-link" href="#internships"><span class="nav-icon">⌕</span> Explore internships</a>
+    <a class="nav-link" href="#candidatePanel"><span class="nav-icon">◎</span> Skill profile</a>
+    <a class="nav-link" href="#results"><span class="nav-icon">↗</span> Match analysis</a>
+    <a class="nav-link" href="#historySection"><span class="nav-icon">◷</span> Analysis history</a>
+  </div></nav>
+  <div class="sidebar-bottom"><strong>Make your next move count.</strong><p>Know the requirements. Find the gaps. Build the skills.</p></div>
+</aside>
+<main class="main" id="overview">
+  <div class="topbar"><div class="breadcrumb">Workspace <span aria-hidden="true">/</span> Overview</div><div class="topbar-right">
+    <span class="status-pill"><span class="status-dot" id="statusDot"></span><span id="connectionStatus">Connecting to backend…</span></span>
+    <span class="user-pill" id="userPill" hidden><span class="user-avatar" id="userAvatar">S</span><span id="userLabel">Signed in</span></span>
+  </div></div>
+  <section class="hero"><div><div class="eyebrow">Your career, made clearer</div><h1>Find the right opportunity.<br>Build the skills to earn it.</h1><p>Compare your current skills with internship requirements, understand exactly where you stand, and turn every gap into a practical learning plan.</p></div><div class="hero-accent">✦ Research · Match · Grow</div></section>
+  <section class="metric-grid" aria-label="Workspace overview">
+    <article class="metric"><div class="metric-label">Internships tracked</div><div class="metric-value" id="metricJobs">—</div><div class="metric-note">Opportunities in your workspace</div></article>
+    <article class="metric"><div class="metric-label">Analyses completed</div><div class="metric-value" id="metricAnalyses">—</div><div class="metric-note">Your saved research runs</div></article>
+    <article class="metric"><div class="metric-label">Best skill match</div><div class="metric-value" id="metricBest">—</div><div class="metric-note">Based on listed requirements</div></article>
+    <article class="metric"><div class="metric-label">Account status</div><div class="metric-value" id="metricAccount" style="font-size:20px">Guest</div><div class="metric-note">Sign in to save your analysis</div></article>
+  </section>
+  <section class="workspace">
+    <section class="panel" id="authPanel"><div class="panel-header"><div><div class="panel-kicker">Your workspace</div><h2>Welcome back</h2><p class="panel-description">Sign in to run a private skill analysis and view your saved history.</p></div><span class="tag">Secure access</span></div>
+      <div class="form-grid">
+        <div><label for="authUsername">Username</label><input id="authUsername" autocomplete="username" placeholder="Your username"></div>
+        <div><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 8 characters"></div>
+        <div class="button-row"><button class="button" type="button" onclick="loginUser()">Sign in <span aria-hidden="true">→</span></button><button class="button button-secondary" type="button" onclick="registerUser()">Create account</button></div>
+        <p class="message" id="authMessage" aria-live="polite">Your access token stays in this browser tab only.</p>
+      </div>
     </section>
-
-    <section class="card">
-
-        <h2>Available Internships</h2>
-
-        <div id="jobList">
-            Loading internships...
-        </div>
-
+    <section class="panel" id="candidatePanel" hidden><div class="panel-header"><div><div class="panel-kicker">Candidate profile</div><h2>What can you do today?</h2><p class="panel-description">Add skills you can confidently explain or demonstrate.</p></div><span class="tag">Personalized</span></div>
+      <div class="form-grid"><div><label for="skills">Your technical skills</label><textarea id="skills" placeholder="Python, SQL, Pandas, REST APIs, Machine Learning"></textarea><div class="field-hint">Separate skills with commas. Avoid adding skills you have not practised.</div></div>
+        <div class="button-row"><button class="button" id="analyzeButton" type="button" onclick="analyzeCandidate()">Analyze my fit <span aria-hidden="true">↗</span></button><button class="button button-ghost" type="button" onclick="logoutUser()">Sign out</button></div><p class="message" id="message" aria-live="polite"></p>
+      </div>
     </section>
-
-    <section class="card" id="results" hidden>
-
-        <h2>Analysis Results</h2>
-
-        <div id="bestMatch"></div>
-
-        <h3>Internship Rankings</h3>
-
-        
-        <div id="ranking"></div>
-
-        <h3>Learning Roadmap</h3>
-        <div id="roadmap"></div>
-    
-
-    </section>
-
+  </section>
+  <section class="job-section" id="internships"><div class="section-heading"><div><div class="panel-kicker">Opportunity board</div><h2>Explore internships</h2><p>Requirements and details from the job records in your database.</p></div><span class="count-label" id="jobCount">Loading opportunities…</span></div><div class="job-grid" id="jobList"><div class="empty-state">Loading internship records…</div></div></section>
+  <section class="results-section" id="results" hidden><div class="section-heading"><div><div class="panel-kicker">Your match report</div><h2>Skill compatibility</h2><p>A transparent comparison against the extracted technical requirements.</p></div><span class="tag">Not a hiring prediction</span></div>
+    <div class="best-card" id="bestMatch"></div>
+    <div class="result-grid"><section class="result-card"><h3>Internship ranking</h3><div class="ranking-list" id="ranking"></div></section><section class="result-card"><h3>Your next learning steps</h3><div class="roadmap-list" id="roadmap"></div></section></div>
+  </section>
+  <section class="job-section" id="historySection" hidden><div class="section-heading"><div><div class="panel-kicker">Your progress</div><h2>Analysis history</h2><p>Recent reports saved to your account.</p></div><span class="count-label" id="historyCount">0 saved reports</span></div><p class="message" id="historyStatus" aria-live="polite"></p><div class="history-list" id="historyList"></div></section>
+  <footer class="footer">CareerLens · AI Internship Research Agent · Match scores reflect listed skill overlap, not selection probability.</footer>
+</main>
 </div>
-
 <script>
-
-    function escapeHTML(value) {
-
-        const element = document.createElement("div");
-
-        element.textContent = String(value ?? "");
-
-        return element.innerHTML;
-    }
-
-
-    // Load backend and available jobs
-    async function loadDashboard() {
-
-        try {
-
-            const healthResponse = await fetch("/health");
-
-            if (!healthResponse.ok) {
-                throw new Error("Backend unavailable");
-            }
-
-            const health = await healthResponse.json();
-
-            document.getElementById("connectionStatus").textContent =
-                "Backend: " + health.status +
-                " | Database: " + health.database;
-
-            document.getElementById("connectionStatus")
-                .className = "status";
-
-            const response = await fetch("/jobs");
-
-            if (!response.ok) {
-                throw new Error("Unable to retrieve internships");
-            }
-
-            const data = await response.json();
-
-            const jobList = document.getElementById("jobList");
-
-            if (!data.jobs || data.jobs.length === 0) {
-                jobList.textContent = "No internships available.";
-                return;
-            }
-
-            jobList.innerHTML = data.jobs.map(job => `
-                <div class="job">
-                    <h3>${escapeHTML(job.role)}</h3>
-                    <p>${escapeHTML(job.company)}</p>
-                    <p class="muted">
-                        ${escapeHTML(job.location)}
-                    </p>
-                </div>
-            `).join("");
-
-        } catch (error) {
-
-            document.getElementById("connectionStatus").textContent =
-                error.message;
-
-            document.getElementById("connectionStatus")
-                .className = "error";
-
-            document.getElementById("jobList").textContent =
-                "Could not load internships.";
-        }
-    }
-
-
-    // Submit candidate skills
-
-    // Submit candidate skills with JWT authentication
-    async function analyzeCandidate() {
-
-        const skills = document.getElementById("skills").value
-            .split(",")
-            .map(skill => skill.trim())
-            .filter(Boolean);
-
-        const message = document.getElementById("message");
-
-        if (!accessToken) {
-            message.textContent = "Please login first.";
-            return;
-        }
-
-        if (skills.length === 0) {
-            message.textContent = "Enter at least one skill.";
-            return;
-        }
-
-        message.textContent = "Analyzing internships...";
-
-        try {
-
-            const response = await fetch("/analyze", {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                },
-
-                body: JSON.stringify({
-                    candidate_skills: skills
-                })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.detail || "Analysis failed");
-            }
-
-            message.textContent = "Analysis completed successfully!";
-
-            displayResults(data.report);
-            await loadHistory();
-
-        } catch (error) {
-            message.textContent = error.message;
-        }
-    }
-
-
-    // Display analysis results
-    function displayResults(report) {
-
-        document.getElementById("results").hidden = false;
-
-        const summary = report.analysis_summary;
-
-        document.getElementById("bestMatch").innerHTML = `
-
-            <h3>Best Matching Internship</h3>
-
-            <div class="score">
-                ${summary.best_match_percentage ?? 0}%
-            </div>
-
-            <h3>
-                ${escapeHTML(summary.best_matching_role || "No match")}
-            </h3>
-
-            <p class="muted">
-                Jobs analyzed: ${summary.jobs_analyzed}
-                | Jobs skipped: ${summary.jobs_skipped}
-            </p>
-
-        `;
-
-        const roadmap = report.learning_roadmap || [];
-
-document.getElementById("roadmap").innerHTML =
-    roadmap.map(step => `
-
-        <div class="result-item">
-
-            <h3>
-                Step ${step.step}: ${escapeHTML(step.skill)}
-            </h3>
-
-            <p>
-                <strong>What to learn:</strong>
-                ${escapeHTML(step.learning_objective)}
-            </p>
-
-            <p>
-                <strong>Practice project:</strong>
-                ${escapeHTML(step.practice_task)}
-            </p>
-
-        </div>
-
-    `).join("") ||
-    "<p>No missing skills identified.</p>";
-
-        document.getElementById("ranking").innerHTML =
-            report.ranked_jobs.map(job => `
-
-                <div class="result-item">
-
-                    <h3>
-                        #${job.rank} -
-                        ${escapeHTML(job.role)}
-                    </h3>
-
-                    <p>
-                        Match:
-                        <strong>${job.match_percentage}%</strong>
-                    </p>
-
-                    <p>
-                        Matched:
-                        ${job.matched_skills.map(escapeHTML).join(", ") || "None"}
-                    </p>
-
-                    <p>
-                        Missing technical skills:
-${job.missing_skills.map(escapeHTML).join(", ") || "None"}
-                    </p>
-<p>Other requirements (not included in skill score): ${(job.other_requirements || []).map(escapeHTML).join(", ") || "None"}</p>
-
-                    <p>
-                        <strong>Eligibility (not included in match score):</strong>
-                        ${
-                            Array.isArray(job.eligibility_requirements)
-                            && job.eligibility_requirements.length
-                            ? job.eligibility_requirements.map(escapeHTML).join(", ")
-                            : "None listed"
-                        }
-                    </p>
-
-                    <a
-                        href="${escapeHTML(job.source_url)}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        View Job
-                    </a>
-
-                </div>
-
-            `).join("");
-    }
-
-
-    // Start dashboard
-    loadDashboard();
-
-
-
-// JWT token stored during current page session
 let accessToken = null;
+let currentUsername = "";
 
-
-// Display authentication messages
-function showAuthMessage(message, isError = false) {
-
-    const element = document.getElementById("authMessage");
-
-    element.textContent = message;
-
-    element.className = isError ? "error" : "success";
+function escapeHTML(value) {
+  return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
 }
-
-
-// Register new user
+function setMessage(id, message, isError) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  node.textContent = message || "";
+  node.className = "message" + (isError ? " error" : message ? " success" : "");
+}
+function setAuthenticated(username) {
+  currentUsername = username || "";
+  document.getElementById("authPanel").hidden = Boolean(accessToken);
+  document.getElementById("candidatePanel").hidden = !accessToken;
+  document.getElementById("userPill").hidden = !accessToken;
+  document.getElementById("metricAccount").textContent = accessToken ? "Active" : "Guest";
+  document.getElementById("userLabel").textContent = currentUsername;
+  document.getElementById("userAvatar").textContent = currentUsername.slice(0,1).toUpperCase() || "U";
+}
+function renderJobs(jobs) {
+  const target = document.getElementById("jobList");
+  document.getElementById("jobCount").textContent = jobs.length + " opportunities";
+  document.getElementById("metricJobs").textContent = String(jobs.length);
+  if (!jobs.length) {
+    target.innerHTML = '<div class="empty-state">No internship records found. Add job data to your database and refresh.</div>';
+    return;
+  }
+  target.innerHTML = jobs.map(function (job) {
+    const meta = [job.location,job.work_mode,job.stipend].filter(Boolean);
+    return '<article class="job-card"><div class="job-top"><span class="company-mark">✦</span><span class="tag">' + escapeHTML(job.experience || "Student opportunity") + '</span></div>' +
+      '<h3>' + escapeHTML(job.role || "Internship role") + '</h3><p class="company-name">' + escapeHTML(job.company || "Company not listed") + '</p>' +
+      '<div class="job-meta">' + meta.map(function (item) { return '<span class="tag">' + escapeHTML(item) + '</span>'; }).join("") + '</div>' +
+      '<p class="field-hint">' + (job.openings ? escapeHTML(job.openings) + " · " : "") + (job.deadline ? "Deadline: " + escapeHTML(job.deadline) : "Check the source for current details") + '</p>' +
+      '<a class="job-link" href="' + escapeHTML(job.source_url || "#") + '" target="_blank" rel="noopener noreferrer">View original listing ↗</a></article>';
+  }).join("");
+}
+async function loadDashboard() {
+  const connection = document.getElementById("connectionStatus");
+  try {
+    const healthResponse = await fetch("/health");
+    if (!healthResponse.ok) throw new Error("Backend health check failed");
+    const health = await healthResponse.json();
+    connection.textContent = "API " + health.status + " · Database " + health.database;
+    document.getElementById("statusDot").style.background = "var(--mint)";
+    const response = await fetch("/jobs");
+    if (!response.ok) throw new Error("Could not load internship records");
+    const data = await response.json();
+    renderJobs(Array.isArray(data.jobs) ? data.jobs : []);
+  } catch (error) {
+    connection.textContent = "Connection issue";
+    document.getElementById("statusDot").style.background = "var(--rose)";
+    document.getElementById("jobList").innerHTML = '<div class="empty-state">' + escapeHTML(error.message) + '</div>';
+    document.getElementById("jobCount").textContent = "Unavailable";
+  }
+}
 async function registerUser() {
-
-    const username =
-        document.getElementById("authUsername").value.trim();
-
-    const password =
-        document.getElementById("authPassword").value;
-
-    if (!username || !password) {
-        showAuthMessage("Enter username and password.", true);
-        return;
-    }
-
-    try {
-
-        const response = await fetch("/auth/register", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.detail || "Registration failed");
-        }
-
-        showAuthMessage("Registration successful! Please login.");
-
-    } catch(error) {
-
-        showAuthMessage(error.message, true);
-    }
+  const username = document.getElementById("authUsername").value.trim();
+  const password = document.getElementById("authPassword").value;
+  if (!username || !password) return setMessage("authMessage","Enter a username and password.",true);
+  try {
+    const response = await fetch("/auth/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:username,password:password})});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Registration failed");
+    setMessage("authMessage","Account created. Sign in with your new credentials.",false);
+  } catch (error) { setMessage("authMessage",error.message,true); }
 }
-
-
-// Login existing user
 async function loginUser() {
-
-    const username =
-        document.getElementById("authUsername").value.trim();
-
-    const password =
-        document.getElementById("authPassword").value;
-
-    if (!username || !password) {
-        showAuthMessage("Enter username and password.", true);
-        return;
-    }
-
-    try {
-
-        const response = await fetch("/auth/login", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.detail || "Login failed");
-        }
-
-        accessToken = data.access_token;
-
-        showAuthMessage("Login successful! Welcome " + username);
-
-        await loadHistory();
-
-    } catch(error) {
-
-        showAuthMessage(error.message, true);
-    }
+  const username = document.getElementById("authUsername").value.trim();
+  const password = document.getElementById("authPassword").value;
+  if (!username || !password) return setMessage("authMessage","Enter your username and password.",true);
+  try {
+    const response = await fetch("/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:username,password:password})});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Sign in failed");
+    accessToken = data.access_token;
+    setAuthenticated(username);
+    setMessage("message","Signed in. Your workspace is ready.",false);
+    await loadHistory();
+  } catch (error) { setMessage("authMessage",error.message,true); }
 }
-
-
-
-    // Load analysis history of the logged-in user
-    async function loadHistory() {
-
-        if (!accessToken) return;
-
-        let section = document.getElementById("historySection");
-
-        // Create history section if it does not exist
-        if (!section) {
-
-            section = document.createElement("section");
-            section.id = "historySection";
-
-            section.style.marginTop = "25px";
-            section.style.padding = "20px";
-            section.style.border = "1px solid #ccc";
-            section.style.borderRadius = "10px";
-
-            section.innerHTML = `
-                <h2>My Analysis History</h2>
-                <p id="historyStatus">Loading history...</p>
-                <div id="historyList"></div>
-            `;
-
-            const results = document.getElementById("results");
-
-            if (results && results.parentNode) {
-                results.parentNode.insertBefore(
-                    section,
-                    results.nextSibling
-                );
-            } else {
-                document.body.appendChild(section);
-            }
-        }
-
-        const status = document.getElementById("historyStatus");
-        const historyList = document.getElementById("historyList");
-
-        status.textContent = "Loading history...";
-        historyList.replaceChildren();
-
-        try {
-
-            const response = await fetch("/me/analyses", {
-
-                method: "GET",
-
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`
-                }
-
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.detail || "Could not load history");
-            }
-
-            const records = Array.isArray(data.history)
-                ? data.history
-                : [];
-
-            if (records.length === 0) {
-                status.textContent = "No previous analyses found.";
-                return;
-            }
-
-            status.textContent =
-                `Total saved analyses: ${data.total_records}`;
-
-            records.forEach((record, index) => {
-
-                const card = document.createElement("div");
-
-                card.style.marginTop = "15px";
-                card.style.padding = "12px";
-                card.style.border = "1px solid #ddd";
-                card.style.borderRadius = "8px";
-
-                const heading = document.createElement("h3");
-                heading.textContent = `Analysis ${index + 1}`;
-
-                const details = document.createElement("pre");
-                details.style.whiteSpace = "pre-wrap";
-                details.style.overflowWrap = "anywhere";
-                details.textContent = JSON.stringify(record, null, 2);
-
-                card.appendChild(heading);
-                card.appendChild(details);
-
-                historyList.appendChild(card);
-
-            });
-
-        } catch (error) {
-
-            status.textContent = error.message;
-
-        }
-    }
-
-
-// Logout
 function logoutUser() {
-
-    accessToken = null;
-
-    const historySection = document.getElementById("historySection");
-    if (historySection) historySection.remove();
-
-    showAuthMessage("Logged out successfully.");
+  accessToken = null;
+  currentUsername = "";
+  setAuthenticated("");
+  document.getElementById("historySection").hidden = true;
+  document.getElementById("results").hidden = true;
+  document.getElementById("historyList").replaceChildren();
+  setMessage("authMessage","You have signed out.",false);
+  setMessage("message","",false);
+  document.getElementById("metricBest").textContent = "—";
+  document.getElementById("metricAnalyses").textContent = "—";
 }
+async function analyzeCandidate() {
+  if (!accessToken) return setMessage("message","Sign in before running an analysis.",true);
+  const skills = document.getElementById("skills").value.split(",").map(function (skill) { return skill.trim(); }).filter(Boolean);
+  if (!skills.length) return setMessage("message","Add at least one skill to continue.",true);
+  const button = document.getElementById("analyzeButton");
+  button.disabled = true;
+  button.textContent = "Analyzing your profile…";
+  setMessage("message","Comparing your skills with internship requirements.",false);
+  try {
+    const response = await fetch("/analyze",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer " + accessToken},
+      body:JSON.stringify({candidate_skills:skills})
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      if (response.status === 401) logoutUser();
+      throw new Error(data.detail || "Analysis failed");
+    }
+    displayResults(data.report);
+    setMessage("message","Analysis saved successfully to your account.",false);
+    await loadHistory();
+    document.getElementById("results").scrollIntoView({behavior:"smooth",block:"start"});
+  } catch (error) {
+    setMessage("message",error.message,true);
+  } finally {
+    button.disabled = false;
+    button.innerHTML = 'Analyze my fit <span aria-hidden="true">↗</span>';
+  }
+}
+function displayResults(report) {
+  const summary = report.analysis_summary || {};
+  const score = Math.max(0,Math.min(100,Number(summary.best_match_percentage || 0)));
+  document.getElementById("results").hidden = false;
+  document.getElementById("metricBest").textContent = score + "%";
+  document.getElementById("bestMatch").innerHTML =
+    '<div><div class="panel-kicker">Strongest current alignment</div><h3>' + escapeHTML(summary.best_matching_role || "No matching role found") + '</h3>' +
+    '<p>' + Number(summary.jobs_analyzed || 0) + ' roles analyzed · ' + Number(summary.jobs_skipped || 0) + ' skipped</p>' +
+    '<p style="margin-top:12px">The score measures overlap with extracted technical requirements. It does not predict hiring outcomes.</p></div>' +
+    '<div class="score-ring" style="--score:' + score + '%"><strong>' + score + '%</strong></div>';
 
+  const rankings = document.getElementById("ranking");
+  const jobs = Array.isArray(report.ranked_jobs) ? report.ranked_jobs : [];
+  if (!jobs.length) {
+    rankings.innerHTML = '<div class="empty-state">No roles had enough extracted requirements to calculate a match.</div>';
+  } else {
+    rankings.innerHTML = jobs.map(function (job) {
+      const match = Math.max(0,Math.min(100,Number(job.match_percentage || 0)));
+      const matched = Array.isArray(job.matched_skills) ? job.matched_skills : [];
+      const missing = Array.isArray(job.missing_skills) ? job.missing_skills : [];
+      const other = Array.isArray(job.other_requirements) ? job.other_requirements : [];
+      const eligibility = Array.isArray(job.eligibility_requirements) ? job.eligibility_requirements : [];
+      return '<article class="ranking-item"><div class="ranking-head"><div class="rank-title"><span class="rank-number">#' + escapeHTML(job.rank) + '</span><div><h3>' + escapeHTML(job.role) + '</h3><div class="field-hint">' + escapeHTML(job.company || "") + '</div></div></div><span class="match-value">' + match + '%</span></div>' +
+        '<div class="progress-track"><div class="progress-fill" style="width:' + match + '%"></div></div>' +
+        '<div class="detail-label">Skills you matched</div><div class="skill-row">' + (matched.length ? matched.map(function (s) { return '<span class="skill-chip good">' + escapeHTML(s) + '</span>'; }).join("") : '<span class="detail-copy">No exact matches yet</span>') + '</div>' +
+        '<div class="detail-label">Skills to develop</div><div class="skill-row">' + (missing.length ? missing.map(function (s) { return '<span class="skill-chip gap">' + escapeHTML(s) + '</span>'; }).join("") : '<span class="detail-copy">No missing technical skills listed</span>') + '</div>' +
+        '<div class="detail-label">Equipment / other requirements</div><div class="detail-copy">' + (other.length ? other.map(escapeHTML).join(", ") : "None listed") + '</div>' +
+        '<div class="detail-label">Eligibility criteria</div><div class="detail-copy">' + (eligibility.length ? eligibility.map(escapeHTML).join(" · ") : "Check the original job listing") + '</div>' +
+        (job.source_url ? '<p style="margin:12px 0 0"><a class="job-link" href="' + escapeHTML(job.source_url) + '" target="_blank" rel="noopener noreferrer">Review source listing ↗</a></p>' : '') +
+        '</article>';
+    }).join("");
+  }
 
+  const roadmap = Array.isArray(report.learning_roadmap) ? report.learning_roadmap : [];
+  document.getElementById("roadmap").innerHTML = roadmap.length ? roadmap.map(function (step) {
+    return '<article class="roadmap-item"><span class="step-number">' + escapeHTML(step.step) + '</span><div><h3>' + escapeHTML(step.skill) + '</h3><p>' + escapeHTML(step.learning_objective) + '</p><p><strong>Practice:</strong> ' + escapeHTML(step.practice_task) + '</p></div></article>';
+  }).join("") : '<div class="empty-state">No learning gaps identified from the current report.</div>';
+}
+async function loadHistory() {
+  if (!accessToken) return;
+  const section = document.getElementById("historySection");
+  const status = document.getElementById("historyStatus");
+  const list = document.getElementById("historyList");
+  section.hidden = false;
+  status.textContent = "Loading saved reports…";
+  list.replaceChildren();
+  try {
+    const response = await fetch("/me/analyses",{headers:{"Authorization":"Bearer " + accessToken}});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Could not load history");
+    const records = Array.isArray(data.history) ? data.history : [];
+    document.getElementById("historyCount").textContent = (data.total_records || 0) + " saved reports";
+    document.getElementById("metricAnalyses").textContent = String(data.total_records || 0);
+    if (!records.length) {
+      status.textContent = "";
+      list.innerHTML = '<div class="empty-state">No saved analyses yet. Run your first skill comparison above.</div>';
+      return;
+    }
+    status.textContent = "Your latest " + records.length + " reports are shown below.";
+    list.innerHTML = records.map(function (record,index) {
+      const analysis = record.analysis || {};
+      const summary = analysis.analysis_summary || {};
+      const best = (analysis.ranked_jobs || [])[0] || {};
+      const created = record.created_at ? new Date(record.created_at).toLocaleString() : "Date unavailable";
+      const score = Number(summary.best_match_percentage || 0);
+      const skills = analysis.candidate_profile && Array.isArray(analysis.candidate_profile.skills) ? analysis.candidate_profile.skills : [];
+      return '<article class="history-card"><div class="history-card-top"><span class="tag">Report ' + (index + 1) + '</span><span class="history-score">' + score + '%</span></div>' +
+        '<h3 style="margin-top:12px">' + escapeHTML(summary.best_matching_role || best.role || "No top match") + '</h3>' +
+        '<p>' + escapeHTML(created) + '</p><p><strong>Profile:</strong> ' + (skills.length ? skills.map(escapeHTML).join(", ") : "No skills recorded") + '</p>' +
+        '<p><strong>Roles compared:</strong> ' + Number(summary.jobs_analyzed || 0) + '</p></article>';
+    }).join("");
+  } catch (error) {
+    status.textContent = error.message;
+  }
+}
+setAuthenticated("");
+loadDashboard();
 </script>
-
 </body>
 </html>

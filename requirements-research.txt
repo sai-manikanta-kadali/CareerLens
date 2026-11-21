@@ -1,0 +1,3 @@
+# Optional packages for the separate webpage/LLM research notebook.
+# The deployed FastAPI application does not require this package.
+smolagents[transformers]
